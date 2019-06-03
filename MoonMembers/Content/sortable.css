@@ -1,0 +1,69 @@
+﻿/*
+.table-sortable {
+    position: relative;
+}
+
+.table-sortable .sortable-placeholder {
+    height: 37px;
+}
+
+.table-sortable .sortable-placeholder:after {
+    position: absolute;
+    z-index: 10;
+    content: " ";
+    height: 37px;
+    background: #f9f9f9;
+    left: 0;
+    right: 0;
+}
+*/
+
+.ui-draggable, .ui-droppable {
+    background-position: top;
+}
+
+/* Sortable UL */
+#sortable {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    width: 60%;
+}
+
+#sortable li {
+    margin: 0 3px 3px 3px;
+    padding: 0.4em;
+    padding-left: 1.5em;
+    font-size: 1.4em;
+    height: 18px;
+}
+
+#sortable li span {
+    position: absolute;
+    margin-left: -1.3em;
+}
+
+
+/* Sortable Table */
+#sortable_table {
+    margin: 0;
+    padding: 0;
+    width: 60%;
+}
+
+#sortable_table tr {
+    cursor: grab;
+}
+
+#sortable_table td {
+    margin: 0 3px 3px 3px;
+    padding: 0.4em;
+    padding-left: 1.5em;
+    /*font-size: 1.4em;*/
+    height: 18px;
+}
+
+#sortable_table td span {
+    position: absolute;
+    margin-left: -1.3em;
+}

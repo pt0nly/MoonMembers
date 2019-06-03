@@ -1,0 +1,42 @@
+﻿@model IEnumerable<MoonMembers.Models.Members>
+
+@{
+    ViewBag.Title = "BackOffice - Membros";
+    Layout = "~/Views/Shared/_Layout_Backoffice.cshtml";
+}
+
+<h2>Membros</h2>
+
+<p>
+    @Html.RouteLink("Incluir Novo Membro", "BackCreateMember", null, new { @class = "btn btn-success" })
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.MemberName)</th>
+            <th>@Html.DisplayNameFor(model => model.MemberEmail)</th>
+            <th>@Html.DisplayNameFor(model => model.MemberPhoto)</th>
+            <th>@Html.DisplayNameFor(model => model.MemberBirthdate)</th>
+            <th>@Html.DisplayNameFor(model => model.MemberOrder)</th>
+            <th></th>
+        </tr>
+    </thead>
+
+    <tbody id="sortable_table">
+        @foreach (var item in Model)
+        {
+            <tr class="ui-state-default" memberId="@item.MemberId" memberOrder="@item.MemberOrder">
+                <td><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>@Html.DisplayFor(modelItem => item.MemberName)</td>
+                <td>@Html.DisplayFor(modelItem => item.MemberEmail)</td>
+                <td>@Html.DisplayFor(modelItem => item.MemberPhoto)</td>
+                <td>@Html.DisplayFor(modelItem => item.MemberBirthdate)</td>
+                <td>@Html.DisplayFor(modelItem => item.MemberOrder)</td>
+                <td>
+                    @Html.RouteLink("Editar", "BackMemberEdit", new { id = item.MemberId }) |
+                    @Html.RouteLink("Detalhes", "BackMemberDetail", new { id = item.MemberId }) |
+                    @Html.RouteLink("Remover", "BackMemberDelete", new { id = item.MemberId })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

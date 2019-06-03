@@ -9,7 +9,8 @@ namespace MoonMembers
         public static void RegisterBundles(BundleCollection bundles)
         {
             bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
-                        "~/Scripts/jquery-{version}.js"));
+                        "~/Scripts/jquery-{version}.js",
+                        "~/Scripts/jquery-ui.min.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
                         "~/Scripts/jquery.validate*"));
@@ -20,11 +21,14 @@ namespace MoonMembers
                         "~/Scripts/modernizr-*"));
 
             bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
-                      "~/Scripts/bootstrap.js"));
-
+                      "~/Scripts/bootstrap.js",
+                      "~/Scripts/sortable.js"));
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
-                      "~/Content/site.css"));
+                      "~/Content/jquery-ui.min.css",
+                      "~/Content/Site.css",
+                      "~/Content/sortable.css",
+                      "~/Content/checkbox-slider.css"));
         }
     }
 }

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using System.Drawing;
@@ -13,12 +15,7 @@ namespace MoonMembers.Controllers
 {
     public class MembersController : Controller
     {
-        MembersDbContext db;
-
-        public MembersController()
-        {
-            db = new MembersDbContext();
-        }
+        MembersDataAccessLayer objMembers = new MembersDataAccessLayer();
 
         private void SalvarNaPasta(Image img, string caminho)
         {
@@ -30,7 +27,8 @@ namespace MoonMembers.Controllers
 
         private bool IsMemberEmailExist(int memberId, string email)
         {
-            return db.Members.Any(m => m.MemberEmail == email && m.MemberId != memberId);
+            //return db.Members.Any(m => m.memberEmail == email && m.memberId != memberId);
+            return false;
         }
 
 
@@ -39,10 +37,10 @@ namespace MoonMembers.Controllers
         // GET: Members
         public ActionResult Index()
         {
-            // Apenas lista os membros activos, e ordenados
-            var members = db.Members.Where(model => model.MemberStatus.Equals(1)).OrderBy(model => model.MemberOrder);
+            List<Members> members = new List<Members>();
+            members = objMembers.GetAllMembers(1).ToList();
 
-            return View("Index", members);
+            return View(members);
         }
 
         #endregion
@@ -56,8 +54,8 @@ namespace MoonMembers.Controllers
         [Route("backoffice/members", Name = "BackMembers")]
         public ActionResult BackofficeIndex()
         {
-            // Lista todos os membros, e ordenados
-            var members = db.Members.OrderBy(model => model.MemberOrder);
+            List<Members> members = new List<Members>();
+            members = objMembers.GetAllMembers(0).ToList();
 
             return View("Backoffice/Index", members);
         }
@@ -69,17 +67,20 @@ namespace MoonMembers.Controllers
         [Route("backoffice/members/create", Name = "BackCreateMember")]
         public ActionResult BackofficeCreate()
         {
-            var model = new Members();
+            /*
+            var model = new MembersViewModel();
 
             return View("Backoffice/Create", model);
+            */
+            return View("Backoffice/Create");
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Route("backoffice/members/create")]
-        public ActionResult BackofficeCreate(Members model)
+        public ActionResult BackofficeCreate([Bind] Members member)
         {
-            if (IsMemberEmailExist(model.MemberId, model.MemberEmail))
+            if (IsMemberEmailExist(member.memberId, member.memberEmail))
             {
                 ModelState.AddModelError("memberEmail", "Este e-mail já se encontra registado.");
             }
@@ -92,46 +93,36 @@ namespace MoonMembers.Controllers
                 "image/png"
             };
 
-            if (model.ReplacePhoto == null || model.ReplacePhoto.ContentLength == 0)
+            if (member.replacePhoto == null || member.replacePhoto.ContentLength == 0)
             {
-                ModelState.AddModelError("ReplacePhoto", "Este campo é obrigatório");
+                ModelState.AddModelError("replacePhoto", "Este campo é obrigatório");
             }
-            else if (!imageTypes.Contains(model.ReplacePhoto.ContentType))
+            else if (!imageTypes.Contains(member.replacePhoto.ContentType))
             {
-                ModelState.AddModelError("ReplacePhoto", "Escolha uma imagem GIF, JPG ou PNG.");
+                ModelState.AddModelError("replacePhoto", "Escolha uma imagem GIF, JPG ou PNG.");
             }
 
             if (ModelState.IsValid)
             {
-                var member = new Members
-                {
-                    MemberName = model.MemberName,
-                    MemberEmail = model.MemberEmail,
-                    MemberBirthdate = model.MemberBirthdate,
-                    MemberOrder = 0,
-                    MemberStatus = true
-                };
-
                 // Salvar a imagem para a pasta e guardar o caminho
                 var imagemNome = String.Format("{0:yyyyMMdd-HHmmssfff}", DateTime.Now);
-                var extensao = System.IO.Path.GetExtension(model.ReplacePhoto.FileName).ToLower();
+                var extensao = System.IO.Path.GetExtension(member.replacePhoto.FileName).ToLower();
 
-                using (var img = System.Drawing.Image.FromStream(model.ReplacePhoto.InputStream))
+                using (var img = System.Drawing.Image.FromStream(member.replacePhoto.InputStream))
                 {
-                    member.MemberPhoto = String.Format("/Imagens/{0}{1}", imagemNome, extensao);
+                    member.memberPhoto = String.Format("/Imagens/{0}{1}", imagemNome, extensao);
                     // Salva imagem
-                    SalvarNaPasta(img, member.MemberPhoto);
+                    SalvarNaPasta(img, member.memberPhoto);
                 };
 
-                db.Members.Add(member);
-                db.SaveChanges();
+                objMembers.AddMember(member);
 
                 return RedirectToAction("BackofficeIndex");
             }
 
             // Se ocorrer um erro retorna para a página
 
-            return View("Backoffice/Create", model);
+            return View("Backoffice/Create", member);
         }
 
         #endregion
@@ -142,6 +133,7 @@ namespace MoonMembers.Controllers
         /*
          * GET: Membros/Detail/5
          */
+        [HttpGet]
         [Route("backoffice/members/detail/{id?}", Name = "BackMemberDetail")]
         public ActionResult BackofficeDetail(int? id)
         {
@@ -150,7 +142,7 @@ namespace MoonMembers.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            Members member = db.Members.Find(id);
+            Members member = objMembers.GetMemberData(id);
             if (member == null)
             {
                 return HttpNotFound();
@@ -173,7 +165,7 @@ namespace MoonMembers.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            Members member = db.Members.Find(id);
+            Members member = objMembers.GetMemberData(id);
             if (member == null)
             {
                 return HttpNotFound();
@@ -185,15 +177,22 @@ namespace MoonMembers.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Route("backoffice/members/edit/{id}")]
-        public ActionResult BackofficeEdit(int id, [Bind] Members model)
+        public ActionResult BackofficeEdit(int id, [Bind] Members member)
         {
-            if (IsMemberEmailExist(id, model.MemberEmail))
+            if (id != member.memberId)
             {
-                ModelState.AddModelError("MemberEmail", "Este e-mail já se encontra registado.");
+                return HttpNotFound();
+            }
+
+            if (IsMemberEmailExist(id, member.memberEmail))
+            {
+                ModelState.AddModelError("memberEmail", "Este e-mail já se encontra registado.");
             }
 
             if (ModelState.IsValid)
             {
+                objMembers.UpdateMember(member);
+                /*
                 var member = db.Members.Find(id);
                 if (member == null)
                 {
@@ -209,47 +208,47 @@ namespace MoonMembers.Controllers
                     "image/png"
                 };
 
-                if (model.ReplacePhoto == null)
+                if (model.replacePhoto == null)
                 {
                     replacingPhoto = false;
                 }
-                else if (model.ReplacePhoto.ContentLength == 0)
+                else if (model.replacePhoto.ContentLength == 0)
                 {
-                    ModelState.AddModelError("ReplacePhoto", "Escolha uma imagem GIF, JPG ou PNG válida.");
+                    ModelState.AddModelError("memberPhoto", "Escolha uma imagem GIF, JPG ou PNG válida.");
                 }
-                else if (!imageTypes.Contains(model.ReplacePhoto.ContentType))
+                else if (!imageTypes.Contains(model.replacePhoto.ContentType))
                 {
-                    ModelState.AddModelError("ReplacePhoto", "Escolha uma imagem GIF, JPG ou PNG.");
+                    ModelState.AddModelError("memberPhoto", "Escolha uma imagem GIF, JPG ou PNG.");
                 }
 
                 if (ModelState.IsValid)
                 {
-                    member.MemberName = model.MemberName;
-                    member.MemberEmail = model.MemberEmail;
-                    member.MemberBirthdate = model.MemberBirthdate;
-                    member.MemberOrder = model.MemberOrder;
-                    member.MemberStatus = model.MemberStatus;
+                    member.memberName = model.memberName;
+                    member.memberEmail = model.memberEmail;
+                    member.memberBirthdate = model.memberBirthdate;
+                    member.memberOrder = model.memberOrder;
+                    member.memberStatus = model.memberStatus;
 
                     // Guarda o caminho da photo anterior
-                    string previousPhoto = member.MemberPhoto;
+                    string previousPhoto = member.memberPhoto;
 
                     if (replacingPhoto)
                     {
                         // Salvar a imagem para a pasta e guardar o caminho
                         var imagemNome = String.Format("{0:yyyyMMdd-HHmmssfff}", DateTime.Now);
-                        var extensao = System.IO.Path.GetExtension(model.ReplacePhoto.FileName).ToLower();
+                        var extensao = System.IO.Path.GetExtension(model.replacePhoto.FileName).ToLower();
 
-                        using (var img = System.Drawing.Image.FromStream(model.ReplacePhoto.InputStream))
+                        using (var img = System.Drawing.Image.FromStream(model.replacePhoto.InputStream))
                         {
-                            member.MemberPhoto = String.Format("/Imagens/{0}{1}", imagemNome, extensao);
+                            member.memberPhoto = String.Format("/Imagens/{0}{1}", imagemNome, extensao);
                             // Salva imagem
-                            SalvarNaPasta(img, member.MemberPhoto);
+                            SalvarNaPasta(img, member.memberPhoto);
                         };
                     }
 
                     db.SaveChanges();
 
-                    if (replacingPhoto && previousPhoto != member.MemberPhoto)
+                    if (replacingPhoto && previousPhoto != member.memberPhoto)
                     {
                         // Registo foi salvo, já se pode remover photo antiga
                         FileInfo fileOldPhoto = new FileInfo( Server.MapPath(previousPhoto) );
@@ -261,9 +260,12 @@ namespace MoonMembers.Controllers
 
                     return RedirectToAction("BackofficeEdit");
                 }
+                */
+
+                return RedirectToAction("BackofficeIndex");
             }
 
-            return View("Backoffice/Edit", model);
+            return View("Backoffice/Edit", member);
         }
 
         #endregion
@@ -271,17 +273,16 @@ namespace MoonMembers.Controllers
 
         #region Delete
 
-        // GET: Members/Delete/5
         [HttpGet]
         [Route("backoffice/members/delete/{id?}", Name = "BackMemberDelete")]
         public ActionResult BackofficeDelete(int? id)
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return HttpNotFound();
             }
 
-            Members member = db.Members.Find(id);
+            Members member = objMembers.GetMemberData(id);
             if (member == null)
             {
                 return HttpNotFound();
@@ -294,13 +295,15 @@ namespace MoonMembers.Controllers
         // POST: Members/Delete/5
         [HttpPost, ActionName("BackofficeDelete")]
         [ValidateAntiForgeryToken]
-        [Route("backoffice/members/deleteConfirmed{id}", Name = "BackMemberDeleteConfirm")]
-        public ActionResult BackofficeDeleteConfirmed(int id)
+        [Route("backoffice/members/deleteConfirmed{id?}", Name = "BackMemberDeleteConfirm")]
+        public ActionResult BackofficeDeleteConfirmed(int? id)
         {
-            Members member = db.Members.Find(id);
-            db.Members.Remove(member);
+            if (id == null)
+            {
+                return HttpNotFound();
+            }
 
-            db.SaveChanges();
+            objMembers.DeleteMember(id);
 
             return RedirectToAction("Backoffice/Index");
         }
@@ -310,3 +313,60 @@ namespace MoonMembers.Controllers
         #endregion
     }
 }
+/*
+ * Create tblEmployee:
+ * Create table tblEmployee(
+ *  EmployeeId int IDENTITY(1,1) NOT NULL,
+ *  Name varchar(20) NOT NULL,
+ *  City varchar(20) NOT NULL,
+ *  Department varchar(20) NOT NULL,
+ *  Gender varchar(6) NOT NULL
+ * )
+ * 
+ * Create Stored Procedures:
+ * 
+ * To Insert an Employee Record
+ * Create procedure spAddEmployee(
+ *  @Name VARCHAR(20),
+ *  @City VARCHAR(20),
+ *  @Department VARCHAR(20),
+ *  @Gender VARCHAR(6)
+ * ) as
+ * Begin
+ *  Insert into tblEmployee (Name, City, Department, Gender)
+ *  Values (@Name, @City, @Department, @Gender)
+ * End
+ * 
+ * To Update an Employee Record
+ * Create procedure spUpdateEmployee(
+ *  @EmpId INTEGER,
+ *  @Name VARCHAR(20),
+ *  @City VARHCAR(20),
+ *  @Department VARCHAR(20),
+ *  @Gender VARCHAR(6)
+ * ) as
+ * Begin
+ *  Update tblEmployee
+ *      set Name=@Name,
+ *          City=@City,
+ *          Department=@Department,
+ *          Gender=@Gender
+ *  where EmployeeId=@EmpId
+ * End
+ * 
+ * To Delete an Employee Record
+ * Create procedure spDeleteEmployee(
+ *  @EmpId int
+ * ) as
+ * Begin
+ *  Delete from tblEmployee where EmployeeId=@EmpId
+ * End
+ * 
+ * To View all Employee Records
+ * Create procedure spGetAllEmployees as
+ * Begin
+ *  select *
+ *  from tblEmployee
+ *  order by EmployeeId
+ * End
+ */

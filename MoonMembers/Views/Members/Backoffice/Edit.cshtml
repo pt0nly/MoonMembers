@@ -1,0 +1,81 @@
+﻿@model MoonMembers.Models.Members
+
+@{
+    ViewBag.Title = "Backoffice - Editar Membro";
+    Layout = "~/Views/Shared/_Layout_Backoffice.cshtml";
+
+    var status = "";
+    if (Model.MemberStatus)
+    {
+        status = "checked";
+    }
+    /*
+    */
+}
+
+<h2>Editar</h2>
+
+<h4>Membro</h4>
+<hr />
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <input type="hidden" name="memberId" value="@Model.MemberId" />
+
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.MemberStatus, new { @class = "col-sm-2 control-label" })
+        <div class="col-sm-10">
+            <label class="switch">
+                <input @status id="status" name="status" type="checkbox" onchange="document.getElementById('MemberStatus').click();" value="@Model.MemberStatus.ToString()">
+                <span class="slider round"></span>
+            </label>
+            @Html.CheckBoxFor(model => model.MemberStatus, new { style = "display: none;" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.MemberName, new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(model => model.MemberName, new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.MemberName, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.MemberEmail, new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(model => model.MemberEmail, new { @class = "form-control", @placeholder = "E-mail do membro" })
+            @Html.ValidationMessageFor(model => model.MemberEmail, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.MemberBirthdate, new { @class = "control-label col-md-2" })
+        <div class="col-md-10 input-prepend date" id="birthDate" data-date="@DateTime.UtcNow" data-date-format="yyyy-MM-dd">
+            <span class="add-on"><i class="icon-calendar"></i></span>
+            @Html.TextBoxFor(model => model.MemberBirthdate, "{0:yyyy-MM-dd}", new { @type = "date" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.MemberPhoto, new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(model => model.ReplacePhoto, new { type = "file", @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.ReplacePhoto, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="col-md-offset-2 col-md-10">
+            <img src="@Model.MemberPhoto" alt="@Model.MemberName image" class="img-thumbnail" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Salvar Alterações" class="btn btn-success" />
+            @Html.RouteLink("Cancelar", "BackMembers", null, new { @class = "btn btn-danger" })
+        </div>
+    </div>
+}

@@ -8,6 +8,8 @@ namespace MoonMembers.Controllers
 {
     public class HomeController : Controller
     {
+        #region FrontOffice
+
         public ActionResult Index()
         {
             return View();
@@ -26,5 +28,17 @@ namespace MoonMembers.Controllers
 
             return View();
         }
+
+        #endregion
+
+        #region BackOffice
+
+        [Route("backoffice", Name = "BackofficeHome")]
+        public ActionResult BackofficeIndex()
+        {
+            return View("Backoffice/Index");
+        }
+
+        #endregion
     }
 }

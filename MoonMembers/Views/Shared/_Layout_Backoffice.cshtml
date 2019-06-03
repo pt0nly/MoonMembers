@@ -1,5 +1,5 @@
 ﻿@{ 
-    ViewBag.applicationName = "Clube de Membros";
+    ViewBag.applicationName = "BackOffice - Registo de Membros";
 }
 <!DOCTYPE html>
 <html>
@@ -19,14 +19,13 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                @Html.ActionLink((string)ViewBag.applicationName, "index", "home", new { area = "" }, new { @class = "navbar-brand" })
+                @Html.RouteLink("Registo de Membros", "BackofficeHome", null, new { @class = "navbar-brand" })
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Home", "index", "home")</li>
-                    <li>@Html.ActionLink("About", "about", "home")</li>
-                    <li>@Html.ActionLink("Contact", "contact", "home")</li>
-                    <li>@Html.ActionLink("BackOffice", "backofficeIndex", "home")</li>
+                    <li>@Html.RouteLink("Home", "BackofficeHome")</li>
+                    <li>@Html.RouteLink("Membros", "BackMembers")</li>
+                    <li>@Html.ActionLink("Logout", "index", "home")</li>
                 </ul>
             </div>
         </div>

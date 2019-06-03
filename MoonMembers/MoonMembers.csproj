@@ -128,29 +128,19 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\EmployeeController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\MembersController.cs" />
+    <None Include="Controllers\nao_MembersController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\members.cs">
-      <DependentUpon>MoonMembers.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\MoonMembers.Context.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>MoonMembers.Context.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\MoonMembers.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>MoonMembers.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\MoonMembers.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>MoonMembers.edmx</DependentUpon>
-    </Compile>
+    <Compile Include="Models\EmployeeDataAccessLayer.cs" />
+    <Compile Include="Models\Members.cs" />
+    <None Include="Models\nao_Members.cs" />
+    <Compile Include="Models\MembersDbContext.cs" />
+    <None Include="Models\MembersViewModel.cs" />
+    <None Include="Models\nao_MembersDataAccessLayer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -158,39 +148,45 @@
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\bootstrap-toggle.css" />
+    <Content Include="Content\checkbox-slider.css" />
+    <Content Include="Content\images\ui-icons_444444_256x240.png" />
+    <Content Include="Content\images\ui-icons_555555_256x240.png" />
+    <Content Include="Content\images\ui-icons_777620_256x240.png" />
+    <Content Include="Content\images\ui-icons_777777_256x240.png" />
+    <Content Include="Content\images\ui-icons_cc0000_256x240.png" />
+    <Content Include="Content\images\ui-icons_ffffff_256x240.png" />
+    <Content Include="Content\jquery-ui.css" />
+    <Content Include="Content\jquery-ui.min.css" />
+    <Content Include="Content\jquery-ui.structure.css" />
+    <Content Include="Content\jquery-ui.structure.min.css" />
+    <Content Include="Content\jquery-ui.theme.css" />
+    <Content Include="Content\jquery-ui.theme.min.css" />
+    <Content Include="Content\sortable.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
-    <Content Include="Models\MoonMembers.Context.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>MoonMembers.Context.cs</LastGenOutput>
-      <DependentUpon>MoonMembers.edmx</DependentUpon>
-    </Content>
-    <Content Include="Models\MoonMembers.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>MoonMembers.edmx</DependentUpon>
-      <LastGenOutput>MoonMembers.cs</LastGenOutput>
-    </Content>
+    <Content Include="Scripts\bootstrap-toggle.js" />
+    <Content Include="Scripts\bootstrap-toggle.min.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
-    <EntityDeploy Include="Models\MoonMembers.edmx">
-      <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>MoonMembers.Designer.cs</LastGenOutput>
-    </EntityDeploy>
-    <Content Include="Models\MoonMembers.edmx.diagram">
-      <DependentUpon>MoonMembers.edmx</DependentUpon>
-    </Content>
+    <Compile Include="Models\Employee.cs" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />
     <Content Include="Scripts\jquery-3.3.1.slim.js" />
     <Content Include="Scripts\jquery-3.3.1.slim.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery-ui.js" />
+    <Content Include="Scripts\jquery-ui.min.js" />
+    <Content Include="Scripts\jquery.sortable.js" />
+    <Content Include="Scripts\jquery.sortable.min.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\sortable.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
@@ -207,9 +203,22 @@
     <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Members\Index.cshtml" />
+    <Content Include="Views\Shared\_Layout_Backoffice.cshtml" />
+    <Content Include="Views\Home\Backoffice\Index.cshtml" />
+    <Content Include="Views\Members\Backoffice\Index.cshtml" />
+    <Content Include="Views\Members\Backoffice\Detail.cshtml" />
+    <Content Include="Views\Members\Backoffice\Edit.cshtml" />
+    <Content Include="Views\Members\Backoffice\Delete.cshtml" />
+    <Content Include="Views\Employee\Index.cshtml" />
+    <Content Include="Views\Employee\Create.cshtml" />
+    <Content Include="Views\Employee\Delete.cshtml" />
+    <Content Include="Views\Employee\Edit.cshtml" />
+    <Content Include="Views\Employee\Details.cshtml" />
+    <Content Include="Views\Members\Backoffice\Create.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Imagens\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

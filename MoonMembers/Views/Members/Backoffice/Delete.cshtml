@@ -1,0 +1,52 @@
+﻿@model MoonMembers.Models.Members
+
+@{
+    ViewBag.Title = "Backoffice - Remover Membro";
+    Layout = "~/Views/Shared/_Layout_Backoffice.cshtml";
+}
+
+<h2>Remover Membro</h2>
+
+<h3 class="text-danger">Deseja mesmo remover este membro?</h3>
+
+<div class="form-horizontal">
+    <div class="form-group">
+        @Html.LabelFor(model => model.memberName, new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(model => model.memberName, new { @class = "form-control", @disabled = "disabled" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.memberEmail, new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(model => model.memberEmail, new { @class = "form-control", @disabled = "disabled" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.memberBirthdate, new { @class = "control-label col-md-2" })
+        <div class="col-md-10 input-prepend date" id="birthDate" data-date="@DateTime.UtcNow" data-date-format="yyyy-MM-dd">
+            <span class="add-on"><i class="icon-calendar"></i></span>
+            @Html.TextBoxFor(model => model.memberBirthdate, "{0:yyyy-MM-dd}", new { @type = "date", @disabled = "disabled" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <img src="@Model.memberPhoto" alt="@Model.memberName image" class="img-thumbnail" />
+        </div>
+    </div>
+</div>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Remover Membro" class="btn btn-danger" />
+            @Html.RouteLink("Cancelar", "BackMembers", null, new { @class = "btn btn-warning" })
+        </div>
+    </div>
+}

@@ -11,30 +11,30 @@
 <div>
     <div class="form-horizontal">
         <div class="form-group">
-            @Html.LabelFor(model => model.memberName, new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.MemberName, new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.TextBoxFor(model => model.memberName, new { @class = "form-control", @disabled = "disabled" })
+                @Html.TextBoxFor(model => model.MemberName, new { @class = "form-control", @disabled = "disabled" })
             </div>
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.memberEmail, new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.MemberEmail, new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.TextBoxFor(model => model.memberEmail, new { @class = "form-control", @disabled = "disabled" })
+                @Html.TextBoxFor(model => model.MemberEmail, new { @class = "form-control", @disabled = "disabled" })
             </div>
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.memberBirthdate, new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.MemberBirthdate, new { @class = "control-label col-md-2" })
             <div class="col-md-10 input-prepend date" id="birthDate" data-date="@DateTime.UtcNow" data-date-format="yyyy-MM-dd">
                 <span class="add-on"><i class="icon-calendar"></i></span>
-                @Html.TextBoxFor(model => model.memberBirthdate, "{0:yyyy-MM-dd}", new { @type = "date", @disabled = "disabled" })
+                @Html.TextBoxFor(model => model.MemberBirthdate, "{0:yyyy-MM-dd}", new { @type = "date", @disabled = "disabled" })
             </div>
         </div>
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <img src="@Model.memberPhoto" alt="@Model.memberName image" class="img-thumbnail" />
+                <img src="@Model.MemberPhoto" alt="@Model.MemberName image" class="img-thumbnail" />
             </div>
         </div>
 

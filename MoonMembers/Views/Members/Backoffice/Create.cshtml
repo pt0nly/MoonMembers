@@ -1,4 +1,4 @@
-﻿@model MoonMembers.Models.Members
+﻿@model MoonMembers.Models.MembersViewModel
 
 @{
     ViewBag.Title = "Backoffice - Novo Membro";
@@ -14,34 +14,34 @@
     
 <div class="form-horizontal">
     <div class="form-group">
-        @Html.LabelFor(model => model.memberName, new { @class = "control-label col-md-2" })
+        @Html.LabelFor(model => model.MemberName, new { @class = "control-label col-md-2" })
         <div class="col-md-10">
-            @Html.TextBoxFor(model => model.memberName, new { @class = "form-control", @placeholder = "Nome do membro" })
-            @Html.ValidationMessageFor(model => model.memberName, "", new { @class = "text-danger" })
+            @Html.TextBoxFor(model => model.MemberName, new { @class = "form-control", @placeholder = "Nome do membro" })
+            @Html.ValidationMessageFor(model => model.MemberName, "", new { @class = "text-danger" })
         </div>
     </div>
 
     <div class="form-group">
-        @Html.LabelFor(model => model.memberEmail, new { @class = "control-label col-md-2" })
+        @Html.LabelFor(model => model.MemberEmail, new { @class = "control-label col-md-2" })
         <div class="col-md-10">
-            @Html.TextBoxFor(model => model.memberEmail, new { @class = "form-control", @placeholder = "E-mail do membro" })
-            @Html.ValidationMessageFor(model => model.memberEmail, "", new { @class = "text-danger" })
+            @Html.TextBoxFor(model => model.MemberEmail, new { @class = "form-control", @placeholder = "E-mail do membro" })
+            @Html.ValidationMessageFor(model => model.MemberEmail, "", new { @class = "text-danger" })
         </div>
     </div>
 
     <div class="form-group">
-        @Html.LabelFor(model => model.memberBirthdate, new { @class = "control-label col-md-2" })
+        @Html.LabelFor(model => model.MemberBirthdate, new { @class = "control-label col-md-2" })
         <div class="col-md-10 input-prepend date" id="birthDate" data-date="@DateTime.UtcNow" data-date-format="yyyy-MM-dd">
             <span class="add-on"><i class="icon-calendar"></i></span>
-            @Html.TextBoxFor(model => model.memberBirthdate, new { @type = "date" })
+            @Html.TextBoxFor(model => model.MemberBirthdate, new { @type = "date" })
         </div>
     </div>
 
     <div class="form-group">
-        @Html.LabelFor(model => model.memberPhoto, new { @class = "control-label col-md-2" })
+        @Html.LabelFor(model => model.MemberPhoto, new { @class = "control-label col-md-2" })
         <div class="col-md-10">
-            @Html.TextBoxFor(model => model.replacePhoto, new { type = "file", @class = "form-control" })
-            @Html.ValidationMessageFor(model => model.replacePhoto, "", new { @class = "text-danger" })
+            @Html.TextBoxFor(model => model.ReplacePhoto, new { type = "file", @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.ReplacePhoto, "", new { @class = "text-danger" })
         </div>
     </div>
 

@@ -1,59 +1,74 @@
-﻿@model IEnumerable<MoonMembers.Models.members>
+﻿@model IEnumerable<MoonMembers.Models.Members>
 
 @{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Index</h2>
+<h2>Membros</h2>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.Label("Nome da Cidade")
-            @Html.DisplayNameFor(model => model.memberName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.memberEmail)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.memberPhoto)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.memberBirthdate)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.memberOrder)
-        </th>
-        <th></th>
-    </tr>
+@foreach (var item in Model)
+{
+    var age = DateTime.Now.Year - item.MemberBirthdate.Year;
+    if (DateTime.Now.DayOfYear < item.MemberBirthdate.DayOfYear)
+    {
+        age--;
+    }
+    string borderColor = (age <= 20 ? "green" : (age <= 60 ? "red" : "blue"));
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.memberName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.memberEmail)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.memberPhoto)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.memberBirthdate)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.memberOrder)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.memberId }) |
-            @Html.ActionLink("Details", "Details", new { id=item.memberId }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.memberId })
-        </td>
-    </tr>
+
+    <div class="col-sm-6 col-md-4 col-lg-3 p-b-35 isotope-item">
+        <div class="block2">
+            <div class="block2-pic hov-img0 member-grid" style="border-color: @borderColor;">
+                <!-- Image of the Product -->
+                <img src="@item.MemberPhoto" alt="@item.MemberName image" class="img-thumbnail" />
+
+                <div class="block2-txt flex-w flex-t p-t-14" style="margin-top: 10px;">
+                    <div class="block2-txt-child1 flex-col-l " style="padding: 4px;">
+                        <div><b>@Html.DisplayFor(modelItem => item.MemberName)</b></div>
+                        <div>@Html.DisplayFor(modelItem => item.MemberEmail)</div>
+                        <div>@Html.DisplayFor(modelItem => item.MemberBirthdate)</div>
+                        <div>Idade: @age</div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
 }
 
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.MemberName)</th>
+            <th>@Html.DisplayNameFor(model => model.MemberEmail)</th>
+            <th>@Html.DisplayNameFor(model => model.MemberPhoto)</th>
+            <th>@Html.DisplayNameFor(model => model.MemberBirthdate)</th>
+            <th>Idade</th>
+            <th>@Html.DisplayNameFor(model => model.MemberOrder)</th>
+            <th></th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var item in Model)
+        {
+            var age = DateTime.Now.Year - item.MemberBirthdate.Year;
+            if (DateTime.Now.DayOfYear < item.MemberBirthdate.DayOfYear)
+            {
+                age--;
+            }
+
+            string backColor = (age <= 20 ? "green" : (age <= 60 ? "red" : "blue"));
+            <tr style="background-color: @backColor;">
+                <td>@Html.DisplayFor(modelItem => item.MemberName)</td>
+                <td>@Html.DisplayFor(modelItem => item.MemberEmail)</td>
+                <td>@Html.DisplayFor(modelItem => item.MemberPhoto)</td>
+                <td>@Html.DisplayFor(modelItem => item.MemberBirthdate)</td>
+                <td>@age</td>
+                <td>@Html.DisplayFor(modelItem => item.MemberOrder)</td>
+            </tr>
+        }
+    </tbody>
 </table>

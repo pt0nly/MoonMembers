@@ -20,16 +20,13 @@ namespace MoonMembers.Models
         public string MemberName { get; set; }
 
         [Required(ErrorMessage = "O email do membro é obrigatório", AllowEmptyStrings = false)]
+        [DataType(DataType.EmailAddress)]
         [Display(Name = "Email do membro")]
         [StringLength(120)]
         public string MemberEmail { get; set; }
 
         [Display(Name = "Fotografia do membro")]
         public string MemberPhoto { get; set; }
-
-        [DataType(DataType.Upload)]
-        [Display(Name = "Fotografia")]
-        public HttpPostedFileBase ReplacePhoto { get; }
 
         [Required(ErrorMessage = "A data de nascimento é obrigatória", AllowEmptyStrings = false)]
         [Display(Name = "Data de Nascimento")]

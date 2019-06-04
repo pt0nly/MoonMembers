@@ -1,4 +1,4 @@
-﻿@model MoonMembers.Models.Members
+﻿@model MoonMembers.Models.MembersViewModel
 
 @{
     ViewBag.Title = "Backoffice - Editar Membro";
@@ -9,8 +9,6 @@
     {
         status = "checked";
     }
-    /*
-    */
 }
 
 <h2>Editar</h2>
@@ -18,11 +16,12 @@
 <h4>Membro</h4>
 <hr />
 
-@using (Html.BeginForm())
+@using (Html.BeginRouteForm("BackMemberEdit", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
     @Html.AntiForgeryToken()
 
-    <input type="hidden" name="memberId" value="@Model.MemberId" />
+    @Html.HiddenFor(model => model.MemberId)
+    @Html.HiddenFor(model => model.MemberOrder)
 
 
     <div class="form-group">

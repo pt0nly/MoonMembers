@@ -11,6 +11,7 @@ using System.Data.SqlClient;
 using System.Xml;
 using System.Xml.Linq;
 using System.Drawing.Imaging;
+using PagedList;
 
 namespace MoonMembers.Controllers
 {
@@ -40,10 +41,17 @@ namespace MoonMembers.Controllers
         #region FrontOffice
 
         // GET: Members
-        public ActionResult Index()
+        public ActionResult Index(int? page)
         {
+            // 6 Elementos por página
+            int pageSize = 6;
+            int pageIndex = page.HasValue ? Convert.ToInt32(page) : 1;
+
             // Apenas lista os membros activos, e ordenados
-            var members = db.Members.Where(mdl => mdl.MemberStatus == true).OrderBy(mdl => mdl.MemberOrder);
+            IPagedList<Members> members = db.Members
+                        .Where(mdl => mdl.MemberStatus == true)
+                        .OrderBy(mdl => mdl.MemberOrder)
+                        .ToPagedList(pageIndex, pageSize);
 
             return View("Index", members);
         }
@@ -377,6 +385,7 @@ namespace MoonMembers.Controllers
         }
 
         #endregion
+
 
         #region XML
 

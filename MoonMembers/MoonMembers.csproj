@@ -137,7 +137,6 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\MembersController.cs" />
     <Content Include="Views\Members\Backoffice\_MemberList.cshtml" />
-    <None Include="XmlActionResult.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

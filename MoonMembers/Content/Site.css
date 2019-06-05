@@ -103,3 +103,29 @@ textarea {
     border-radius: 5px;
     border-style: solid;
 }
+
+.error {
+    color: red;
+    display: inline-block;
+    margin-bottom: -57px !important;
+    width: 100%;
+}
+
+
+.crud-buttons-grid {
+    display: inline-flex;
+    border-color: gainsboro;
+    background-color: gainsboro;
+}
+
+.crud-buttons.glyphicon-pencil {
+    color: darkorange !important;
+}
+
+.crud-buttons.glyphicon-info-sign {
+    color: royalblue !important;
+}
+
+/*.crud-buttons.glyphicon-trash {
+}
+*/

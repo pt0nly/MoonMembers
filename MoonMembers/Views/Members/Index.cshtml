@@ -2,7 +2,7 @@
 @using PagedList.Mvc;
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Membros";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -10,7 +10,7 @@
 
 @using (Html.BeginForm())
 {
-    <table width="100%">
+    <table style="width: 100%;">
         <tr>
             <td>
                 @foreach (var item in Model)

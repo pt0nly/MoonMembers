@@ -134,20 +134,16 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
-    <Compile Include="Controllers\EmployeeController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\MembersController.cs" />
+    <Content Include="Views\Members\Backoffice\_MemberList.cshtml" />
     <None Include="XmlActionResult.cs" />
-    <None Include="Controllers\nao_MembersController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\EmployeeDataAccessLayer.cs" />
     <Compile Include="Models\Members.cs" />
-    <None Include="Models\nao_Members.cs" />
     <Compile Include="Models\MembersDbContext.cs" />
     <Compile Include="Models\MembersViewModel.cs" />
-    <None Include="Models\nao_MembersDataAccessLayer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -180,7 +176,6 @@
     <Content Include="Scripts\bootstrap-toggle.min.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
-    <Compile Include="Models\Employee.cs" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />
@@ -193,6 +188,7 @@
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\Members.js" />
     <Content Include="Scripts\sortable.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
     <Content Include="Web.config" />
@@ -216,15 +212,11 @@
     <Content Include="Views\Members\Backoffice\Detail.cshtml" />
     <Content Include="Views\Members\Backoffice\Edit.cshtml" />
     <Content Include="Views\Members\Backoffice\Delete.cshtml" />
-    <Content Include="Views\Employee\Index.cshtml" />
-    <Content Include="Views\Employee\Create.cshtml" />
-    <Content Include="Views\Employee\Delete.cshtml" />
-    <Content Include="Views\Employee\Edit.cshtml" />
-    <Content Include="Views\Employee\Details.cshtml" />
     <Content Include="Views\Members\Backoffice\Create.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="FileUpload\" />
     <Folder Include="Imagens\Membros\" />
   </ItemGroup>
   <ItemGroup>

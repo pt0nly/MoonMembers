@@ -1,5 +1,16 @@
 ﻿@{ 
-    ViewBag.applicationName = "BackOffice - Registo de Membros";
+    ViewBag.applicationName = "BackOffice";
+
+    if (ViewData["menu"] == null)
+    {
+        ViewData["menu"] = "Backoffice";
+    }
+
+    var mainMenu = new
+    {
+        Backoffice = ((string)ViewData["menu"] == "Backoffice" ? "active" : ""),
+        Membros = ((string)ViewData["menu"] == "Membros" ? "active" : "")
+    };
 }
 <!DOCTYPE html>
 <html>
@@ -23,8 +34,12 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li>@Html.RouteLink("Home", "BackofficeHome")</li>
-                    <li>@Html.RouteLink("Membros", "BackMembers")</li>
+                    <li class="@mainMenu.Backoffice">@Html.RouteLink("Backoffice Home", "BackofficeHome")</li>
+                    <li class="@mainMenu.Membros">@Html.RouteLink("Membros", "BackMembers")</li>
+                </ul>
+
+                <ul class="nav navbar-nav navbar-right">
+                    <li role="separator" class="divider"></li>
                     <li>@Html.ActionLink("Logout", "index", "home")</li>
                 </ul>
             </div>
@@ -34,7 +49,7 @@
         @RenderBody()
         <hr />
         <footer>
-            <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
+            <p>&copy; @DateTime.Now.Year - Clube Moon Members</p>
         </footer>
     </div>
 

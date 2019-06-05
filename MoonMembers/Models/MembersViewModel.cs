@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Web;
@@ -11,12 +9,12 @@ namespace MoonMembers.Models
     {
         public Int32 MemberId { get; set; }
 
-        [Required(ErrorMessage = "O nome do membro é obrigatório", AllowEmptyStrings = false)]
-        [Display(Name = "Nome do Membro")]
+        [Required(ErrorMessage = "O nome é obrigatório", AllowEmptyStrings = false)]
+        [Display(Name = "Nome")]
         [StringLength(120)]
         public string MemberName { get; set; }
 
-        [Required(ErrorMessage = "O e-mail do produto é obrigatorio", AllowEmptyStrings = false)]
+        [Required(ErrorMessage = "O e-mail é obrigatorio", AllowEmptyStrings = false)]
         [DataType(DataType.EmailAddress)]
         [Display(Name = "E-mail")]
         [StringLength(120)]
@@ -36,8 +34,10 @@ namespace MoonMembers.Models
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime MemberBirthdate { get; set; }
 
+        [Display(Name = "Ordem")]
         public int MemberOrder { get; set; }
 
+        [Display(Name = "Activo")]
         public bool MemberStatus { get; set; }
 
         /*
@@ -55,16 +55,6 @@ namespace MoonMembers.Models
                 MemberOrder = v.MemberOrder,
                 MemberStatus = v.MemberStatus
             };
-            /*
-            MembersViewModel model = new MembersViewModel();
-            model.MemberId = v.MemberId;
-            model.MemberName = v.MemberName;
-            model.MemberEmail = v.MemberEmail;
-            model.MemberBirthdate = v.MemberBirthdate;
-            model.MemberPhoto = v.MemberPhoto;
-            model.MemberOrder = v.MemberOrder;
-            model.MemberStatus = v.MemberStatus;
-            */
 
             return model;
         }

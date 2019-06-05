@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<MoonMembers.Models.Members>
 
 @{
-    ViewBag.Title = "BackOffice - Membros";
+    ViewBag.Title = "Membros";
     Layout = "~/Views/Shared/_Layout_Backoffice.cshtml";
 }
 
@@ -12,35 +12,30 @@
 </p>
 
 <p>
-    @Html.RouteLink("Exportar XML", "BackMemberExportXml", null, new { @class = "btn btn-primary" })
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>@Html.DisplayNameFor(model => model.MemberName)</th>
-            <th>@Html.DisplayNameFor(model => model.MemberEmail)</th>
-            <th>@Html.DisplayNameFor(model => model.MemberPhoto)</th>
-            <th>@Html.DisplayNameFor(model => model.MemberBirthdate)</th>
-            <th>@Html.DisplayNameFor(model => model.MemberOrder)</th>
-            <th></th>
-        </tr>
-    </thead>
+    @using (Html.BeginRouteForm("BackMemberImportXml", FormMethod.Post, new { enctype = "multipart/form-data", id = "importFormXML" }))
+    {
+        <div class="row">
+            <div class="col-sm-6 col-md-6 col-xs-12">
+                <div class="form-group">
+                    <div class="input-group">
+                        <div class="custom-file">
+                            <input id="xmlFile" name="xmlFile" type="file" style="display: none;" accept=".xml" onchange="submitXML();" />
+                            <label class="custom-file-label"></label>
+                        </div>
+                        <div class="input-group-append">
+                            @Html.RouteLink("Exportar XML", "BackMemberExportXml", null, new { @class = "btn btn-primary" })
 
-    <tbody id="sortable_table">
-        @foreach (var item in Model)
-        {
-            <tr class="ui-state-default" memberId="@item.MemberId" memberOrder="@item.MemberOrder">
-                <td><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>@Html.DisplayFor(modelItem => item.MemberName)</td>
-                <td>@Html.DisplayFor(modelItem => item.MemberEmail)</td>
-                <td>@Html.DisplayFor(modelItem => item.MemberPhoto)</td>
-                <td>@Html.DisplayFor(modelItem => item.MemberBirthdate)</td>
-                <td>@Html.DisplayFor(modelItem => item.MemberOrder)</td>
-                <td>
-                    @Html.RouteLink("Editar", "BackMemberEdit", new { id = item.MemberId }) |
-                    @Html.RouteLink("Detalhes", "BackMemberDetail", new { id = item.MemberId }) |
-                    @Html.RouteLink("Remover", "BackMemberDelete", new { id = item.MemberId })
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+                            <input type="button" class="btn btn-danger" onclick="importXML();" value="Importar XML" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</p>
+
+<p>
+    <div id="membersData">
+        @Html.Partial("Backoffice/_MemberList", Model)
+    </div>
+</p>

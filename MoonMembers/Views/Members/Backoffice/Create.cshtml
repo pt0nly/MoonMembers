@@ -1,7 +1,7 @@
 ﻿@model MoonMembers.Models.MembersViewModel
 
 @{
-    ViewBag.Title = "Backoffice - Novo Membro";
+    ViewBag.Title = "Novo Membro";
     Layout = "~/Views/Shared/_Layout_Backoffice.cshtml";
 }
 
@@ -34,13 +34,14 @@
         <div class="col-md-10 input-prepend date" id="birthDate" data-date="@DateTime.UtcNow" data-date-format="yyyy-MM-dd">
             <span class="add-on"><i class="icon-calendar"></i></span>
             @Html.TextBoxFor(model => model.MemberBirthdate, new { @type = "date" })
+            @Html.ValidationMessageFor(model => model.MemberBirthdate, "", new { @class = "text-danger" })
         </div>
     </div>
 
     <div class="form-group">
         @Html.LabelFor(model => model.MemberPhoto, new { @class = "control-label col-md-2" })
         <div class="col-md-10">
-            @Html.TextBoxFor(model => model.ReplacePhoto, new { type = "file", @class = "form-control" })
+            @Html.TextBoxFor(model => model.ReplacePhoto, new { type = "file", @class = "form-control", accept = "image/gif,image/jpeg,image/pjpeg,image/png" })
             @Html.ValidationMessageFor(model => model.ReplacePhoto, "", new { @class = "text-danger" })
         </div>
     </div>

@@ -8,6 +8,15 @@ $(function () {
     $("#sortable_table").disableSelection();
 });
 
+/*
+var ids = [];
+$('.list-item').each(function (index, value) {
+    var id = $(value).prop('id');
+    ids.push(id);
+});
+*/
+
+
 $("#sortable_table").sortable({
     axis: 'y',
     // This event is triggered when the user stopped sorting and the DOM position has changed.
@@ -15,13 +24,11 @@ $("#sortable_table").sortable({
         var order = 1,
             model = [];
 
-        $('#sortable_table tr').each(function () {
+        $('#sortable_table tr').each(function (index, value) {
             /*
-             * Building a new object and pushing in modal array.
-             * Here I am setting memberOrder property which is I am using in my db and building my object
+             * Construindo um novo objecto.
              */
-            // This is for example to build your object and push in a modal array.
-            var objModel = { MemberID: 1, MemberOrder: order };
+            var objModel = { MemberID: parseInt(value.getAttribute('memberId')), MemberOrder: order };
             model.push(objModel);
             order++;
         });
@@ -30,28 +37,18 @@ $("#sortable_table").sortable({
             $.ajax({
                 type: "POST",
                 contentType: "application/json; charset=utf-8",
+                cache: false,
+                async: true,
                 // This is my url put your url here and pass model as data it is in array of my items.
-                url: './members/updateStatusOrder',
+                url: './members/updateOrder',
                 data: JSON.stringify({ model: model }),
                 success: function (data) {
-                    // Do something
+                    // Sucesso
                 },
                 error: function (e) {
-                    // Do something
                 }
             });
         }
-
-
-
-
-
-        /*
-        var memberId = ui.item[0].getAttribute('memberId'),
-            memberOrder = ui.item[0].getAttribute('memberOrder');
-
-        console.log('sortable UPDATE :: Id=' + memberId + '; Order=' + memberOrder);
-        */
     }
 });
 

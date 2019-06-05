@@ -7,11 +7,10 @@ using System.Drawing;
 using MoonMembers.Models;
 using System.Net;
 using System.IO;
-using System.Data.SqlClient;
 using System.Xml;
 using System.Xml.Linq;
-using System.Drawing.Imaging;
 using PagedList;
+using System.Text.RegularExpressions;
 
 namespace MoonMembers.Controllers
 {
@@ -40,7 +39,6 @@ namespace MoonMembers.Controllers
 
         #region FrontOffice
 
-        // GET: Members
         public ActionResult Index(int? page)
         {
             // 6 Elementos por página
@@ -53,6 +51,8 @@ namespace MoonMembers.Controllers
                         .OrderBy(mdl => mdl.MemberOrder)
                         .ToPagedList(pageIndex, pageSize);
 
+            ViewData["menu"] = "Membros";
+
             return View("Index", members);
         }
 
@@ -61,26 +61,38 @@ namespace MoonMembers.Controllers
 
         #region BackOffice
 
-        /*
-         * GET: Membros
-         */
         [Route("backoffice/members", Name = "BackMembers")]
         public ActionResult BackofficeIndex()
         {
             // Lista todos os membros, e ordenados
             var members = db.Members.OrderBy(mdl => mdl.MemberOrder);
 
+            ViewData["menu"] = "Membros";
+
             return View("Backoffice/Index", members);
         }
 
+
+        #region Ajax
+
+        [Route("backoffice/members/getlist", Name = "BackMemberGetList")]
+        public PartialViewResult GetList()
+        {
+            // Lista todos os membros, e ordenados
+            var members = db.Members.OrderBy(mdl => mdl.MemberOrder);
+
+            return PartialView("Backoffice/_MemberList", members);
+        }
+
         [HttpPost]
-        public ActionResult UpdateStatusOrder(List<Members> model)
+        [Route("backoffice/members/updateOrder", Name = "BackMemberUpdateOrder")]
+        public ActionResult UpdateOrder(List<Members> model)
         {
             // Update code to update MemberOrder
-            foreach(var item in model)
+            foreach (var item in model)
             {
                 var status = db.Members.Where(x => x.MemberId == item.MemberId).FirstOrDefault();
-                if (status == null)
+                if (status != null)
                 {
                     status.MemberOrder = item.MemberOrder;
                 }
@@ -88,9 +100,11 @@ namespace MoonMembers.Controllers
                 db.SaveChanges();
             }
 
-
-            return Content("asdas");
+            return Content("OK");
         }
+
+        #endregion
+
 
         #region Create
 
@@ -100,6 +114,8 @@ namespace MoonMembers.Controllers
         {
             var model = new MembersViewModel();
 
+            ViewData["menu"] = "Membros";
+
             return View("Backoffice/Create", model);
         }
 
@@ -108,10 +124,24 @@ namespace MoonMembers.Controllers
         [Route("backoffice/members/create")]
         public ActionResult BackofficeCreate(MembersViewModel model)
         {
+            string strEmailReg = @"^([\w-\.]+)@((\[[0-9]{2,3}\.[0-9]{2,3}\.[0-9]{2,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{2,3})(\]?)$";
+
+            if (model.MemberEmail == null || !Regex.IsMatch(model.MemberEmail, strEmailReg))
+            {
+                ModelState.AddModelError("memberEmail", "Introduza um e-mail válido.");
+            }
+
             if (IsMemberEmailExist(model.MemberId, model.MemberEmail))
             {
                 ModelState.AddModelError("memberEmail", "Este e-mail já se encontra registado.");
             }
+
+            /*
+            if (model.MemberBirthdate == null)
+            {
+                ModelState.AddModelError("MemberBirthdate", "A data de nascimento é obrigatória.");
+            }
+            */
 
             var imageTypes = new string[]
             {
@@ -155,8 +185,12 @@ namespace MoonMembers.Controllers
                 db.Members.Add(member);
                 db.SaveChanges();
 
+                ViewData["menu"] = "Membros";
+
                 return RedirectToAction("BackofficeIndex");
             }
+
+            ViewData["menu"] = "Membros";
 
             // Se ocorrer um erro retorna para a página
             return View("Backoffice/Create", model);
@@ -167,9 +201,6 @@ namespace MoonMembers.Controllers
 
         #region Details
 
-        /*
-         * GET: Membros/Detail/5
-         */
         [Route("backoffice/members/detail/{id?}", Name = "BackMemberDetail")]
         public ActionResult BackofficeDetail(int? id)
         {
@@ -183,6 +214,8 @@ namespace MoonMembers.Controllers
             {
                 return HttpNotFound();
             }
+
+            ViewData["menu"] = "Membros";
 
             return View("Backoffice/Detail", member);
         }
@@ -207,6 +240,8 @@ namespace MoonMembers.Controllers
                 return HttpNotFound();
             }
 
+            ViewData["menu"] = "Membros";
+
             return View("Backoffice/Edit", (MembersViewModel)member);
         }
 
@@ -215,10 +250,22 @@ namespace MoonMembers.Controllers
         [Route("backoffice/members/edit/{id}")]
         public ActionResult BackofficeEdit(int id, [Bind] MembersViewModel model)
         {
+            string strEmailReg = @"^([\w-\.]+)@((\[[0-9]{2,3}\.[0-9]{2,3}\.[0-9]{2,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{2,3})(\]?)$";
+
+            if (model.MemberEmail == null || !Regex.IsMatch(model.MemberEmail, strEmailReg))
+            {
+                ModelState.AddModelError("memberEmail", "Introduza um e-mail válido.");
+            }
+
             if (IsMemberEmailExist(id, model.MemberEmail))
             {
                 ModelState.AddModelError("MemberEmail", "Este e-mail já se encontra registado.");
             }
+            /*
+            if (model.MemberBirthdate == null)
+            {
+                ModelState.AddModelError("MemberBirthdate", "A data de nascimento é obrigatória.");
+            }*/
 
             if (ModelState.IsValid)
             {
@@ -288,9 +335,13 @@ namespace MoonMembers.Controllers
                         }
                     }
 
-                    return RedirectToAction("BackofficeEdit");
+                    ViewData["menu"] = "Membros";
+
+                    return RedirectToAction("BackofficeIndex");
                 }
             }
+
+            ViewData["menu"] = "Membros";
 
             return View("Backoffice/Edit", model);
         }
@@ -300,7 +351,6 @@ namespace MoonMembers.Controllers
 
         #region Delete
 
-        // GET: Members/Delete/5
         [HttpGet]
         [Route("backoffice/members/delete/{id?}", Name = "BackMemberDelete")]
         public ActionResult BackofficeDelete(int? id)
@@ -316,11 +366,11 @@ namespace MoonMembers.Controllers
                 return HttpNotFound();
             }
 
+            ViewData["menu"] = "Membros";
 
             return View("Backoffice/Delete", member);
         }
 
-        // POST: Members/Delete/5
         [HttpPost, ActionName("BackofficeDelete")]
         [ValidateAntiForgeryToken]
         [Route("backoffice/members/deleteConfirmed/{id?}", Name = "BackMemberDeleteConfirm")]
@@ -347,6 +397,8 @@ namespace MoonMembers.Controllers
             {
                 file.Delete();
             }
+
+            ViewData["menu"] = "Membros";
 
             return RedirectToRoute("BackMembers");
         }
@@ -417,11 +469,10 @@ namespace MoonMembers.Controllers
                         new XElement("MemberName", item.MemberName),
                         new XElement("MemberEmail", item.MemberEmail),
                         new XElement("MemberBirthdate", item.MemberBirthdate),
-                        new XElement("MemberPhoto", item.MemberPhoto),
                         new XElement("MemberOrder", item.MemberOrder),
                         new XElement("MemberStatus", item.MemberStatus),
                         new XElement("MemberPhoto",
-                            new XAttribute("path", item.MemberPhoto),
+                            new XAttribute("extension", System.IO.Path.GetExtension( item.MemberPhoto ).ToLower()  ),
                             new XCData(photoFile)
                         )
                     );
@@ -437,9 +488,77 @@ namespace MoonMembers.Controllers
             return File(ms, "application/xml", "ClubMembers.xml");
         }
 
-        public ActionResult ImportXML()
+        [HttpPost]
+        [Route("backoffice/members/importxml", Name = "BackMemberImportXml")]
+        public ActionResult ImportXML(HttpPostedFileBase xmlFile)
         {
-            return Content("Import XML");
+            if (xmlFile.ContentType.Equals("application/xml") || xmlFile.ContentType.Equals("text/xml"))
+            {
+                var xmlPath = Server.MapPath("~/FileUpload/" + xmlFile.FileName);
+                xmlFile.SaveAs(xmlPath);
+
+                // Apagar todos os dados e fotos
+                foreach(var member in db.Members)
+                {
+                    FileInfo file = new FileInfo( Server.MapPath(member.MemberPhoto) );
+                    if (file.Exists)
+                    {
+                        file.Delete();
+                    }
+                }
+
+                db.Members.RemoveRange(db.Members);
+                db.SaveChanges();
+
+
+                // Ler ficheiro XML e importar os dados para a base de dados
+                XDocument doc = XDocument.Load(xmlPath);
+                
+                foreach(var xmlMember in doc.Descendants("member"))
+                {
+                    Members member = new Members
+                    {
+                        MemberId = Convert.ToInt32(xmlMember.Element("MemberId").Value),
+                        MemberName = xmlMember.Element("MemberName").Value,
+                        MemberEmail = xmlMember.Element("MemberEmail").Value,
+                        MemberBirthdate = Convert.ToDateTime(xmlMember.Element("MemberBirthdate").Value),
+                        MemberOrder = Convert.ToInt32(xmlMember.Element("MemberOrder").Value),
+                        MemberStatus = Convert.ToBoolean(xmlMember.Element("MemberStatus").Value),
+                        MemberPhoto = ""
+                    };
+
+                    // Guardar a imagem num ficheiro, caso tenha dados
+                    if (xmlMember.Element("MemberPhoto").Value.Length > 0)
+                    {
+                        var imagemNome = String.Format("{0:yyyyMMdd-HHmmssfff}", DateTime.Now);
+                        var extensao = xmlMember.Element("MemberPhoto").Attribute("extension").Value;
+
+                        member.MemberPhoto = String.Format("/Imagens/Membros/{0}{1}", imagemNome, extensao);
+
+                        // Salva imagem
+                        SalvarNaPasta(Base64ToImage(xmlMember.Element("MemberPhoto").Value), member.MemberPhoto);
+                    }
+
+                    // Guarda o registo
+                    db.Members.Add(member);
+                }
+                db.SaveChanges();
+
+                // Remove o ficheiro XML
+                FileInfo xmlInfo = new FileInfo(xmlPath);
+                if (xmlInfo.Exists)
+                {
+                    xmlInfo.Delete();
+                }
+
+                ViewBag.Success = "XML importado com sucesso!";
+            }
+            else
+            {
+                ViewBag.Error = "Ficheiro inválido (Upload apenas ficheiro XML)!";
+            }
+
+            return RedirectToRoute("BackMembers");
         }
 
         #endregion

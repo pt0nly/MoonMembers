@@ -1,0 +1,49 @@
+﻿@model IEnumerable<MoonMembers.Models.Members>
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th></th>
+            <th></th>
+            <th>@Html.DisplayNameFor(model => model.MemberName)</th>
+            <th>@Html.DisplayNameFor(model => model.MemberEmail)</th>
+            <th>@Html.DisplayNameFor(model => model.MemberBirthdate)</th>
+            <th></th>
+        </tr>
+    </thead>
+
+    <tbody id="sortable_table">
+        @foreach (var item in Model)
+        {
+            var backColor = "transparent";
+            if (!item.MemberStatus)
+            {
+                backColor = "red";
+            }
+            <tr class="ui-state-default" memberId="@item.MemberId" @*memberOrder="@item.MemberOrder"*@ style="background-color: @backColor;">
+                <td><span class="ui-icon ui-icon-arrowthick-2-n-s"></span></td>
+
+                <td>
+                    <img src="@item.MemberPhoto" alt="@item.MemberName image" style="width: 60px;" class="img-thumbnail" />
+                </td>
+
+                <td>@Html.DisplayFor(modelItem => item.MemberName)</td>
+                <td>@Html.DisplayFor(modelItem => item.MemberEmail)</td>
+                <td>@Html.DisplayFor(modelItem => item.MemberBirthdate)</td>
+                <td>
+                    <div class="member-grid crud-buttons-grid">
+                        @Html.RouteLink(" ", "BackMemberEdit", new { id = item.MemberId }, new { @class = "glyphicon glyphicon-pencil crud-buttons", alt = "Editar", title = "Editar" })
+                    </div>
+
+                    <div class="member-grid crud-buttons-grid">
+                        @Html.RouteLink(" ", "BackMemberDetail", new { id = item.MemberId }, new { @class = "glyphicon glyphicon-info-sign crud-buttons", alt = "Detalhes", title = "Detalhes" })
+                    </div>
+
+                    <div class="member-grid crud-buttons-grid">
+                        @Html.RouteLink(" ", "BackMemberDelete", new { id = item.MemberId }, new { @class = "glyphicon glyphicon-trash crud-buttons", alt = "Apagar", title = "Apagar" })
+                    </div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

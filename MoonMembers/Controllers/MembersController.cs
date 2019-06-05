@@ -136,13 +136,6 @@ namespace MoonMembers.Controllers
                 ModelState.AddModelError("memberEmail", "Este e-mail já se encontra registado.");
             }
 
-            /*
-            if (model.MemberBirthdate == null)
-            {
-                ModelState.AddModelError("MemberBirthdate", "A data de nascimento é obrigatória.");
-            }
-            */
-
             var imageTypes = new string[]
             {
                 "image/gif",
@@ -261,11 +254,6 @@ namespace MoonMembers.Controllers
             {
                 ModelState.AddModelError("MemberEmail", "Este e-mail já se encontra registado.");
             }
-            /*
-            if (model.MemberBirthdate == null)
-            {
-                ModelState.AddModelError("MemberBirthdate", "A data de nascimento é obrigatória.");
-            }*/
 
             if (ModelState.IsValid)
             {
